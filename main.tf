@@ -34,7 +34,7 @@ resource "aws_apigatewayv2_integration" "http-api-proxy" {
   integration_type = "HTTP_PROXY"
 
   integration_method = "ANY"
-  integration_uri    = aws_lambda_function.cloud-resume-lambda-function.invoke_arn
+  integration_uri    = aws_lambda_function_url.for-api-gateway.function_url
 }
 
 resource "aws_apigatewayv2_route" "http-api-route" {
@@ -97,6 +97,10 @@ resource "aws_lambda_function" "cloud-resume-lambda-function" {
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "index.lambda_handler"
   runtime          = "python3.8"
+}
+resource "aws_lambda_function_url" "for-api-gateway" {
+  function_name      = aws_lambda_function.cloud-resume-lambda-function.function_name
+  authorization_type = "NONE"
 }
 
 //*******************************************************************************
