@@ -168,6 +168,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.mybucket.bucket_domain_name
     origin_id   = local.s3_origin_id
+    custom_header {
+      Referer =      "uXg-Tnd"
+    }
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
@@ -178,6 +181,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
   comment             = "my-cloudfront"
   default_root_object = "index.html"
+
+
 
 
   # If you have domain configured use it here 
@@ -266,9 +271,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     minimum_protocol_version = "TLSv1"
   }
 
-  custom_header {
-    Referer =      "uXg-Tnd"
-  }
 }
 
 #add route53 records
