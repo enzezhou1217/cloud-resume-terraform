@@ -258,9 +258,11 @@ resource "aws_cloudfront_distribution" "s3_website" {
 
   price_class = "PriceClass_200"
 
-  geo_restriction = {
-    type = "none"  # none, whitelist, blacklist
-    locations = [] # List of 2-letter country codes
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+      locations        = []
+    }
   }
 
   tags = {
