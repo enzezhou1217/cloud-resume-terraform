@@ -3,10 +3,18 @@
     "Statement": [
         {
             "Sid": "PublicReadGetObject",
-            "Effect": "Allow",
+            "Effect": "Deny",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*"
+            "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*",
+            "Condition": {
+                "StringNotEquals": {
+                    "aws:Referer": [
+                        "uXg-Tnd",
+                        "78b-cut"
+                    ]
+                }
+            }
         },
         {
             "Sid": "S3SyncforGitHub",
