@@ -169,7 +169,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     domain_name = aws_s3_bucket.mybucket.bucket_domain_name
     origin_id   = local.s3_origin_id
     custom_header {
-      Referer =      "uXg-Tnd"
+      name = "Referer"
+      value = "uXg-Tnd"
     }
 
     s3_origin_config {
