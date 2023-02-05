@@ -50,7 +50,7 @@ resource "aws_apigatewayv2_stage" "prod" {
   name   = "prod-stage"
   auto_deploy = true
 }
-
+#lambda permission to invoke api
 resource "aws_lambda_permission" "lambda_permission" {
   statement_id  = "AllowAPIToInvokeLambda"
   action        = "lambda:InvokeFunction"
@@ -82,7 +82,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 }
 EOF
 }
-#lambda roles  
+#policy for dynamo crud
 resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
    name = "dynamodb_lambda_policy"
    role = aws_iam_role.iam_for_lambda.id
@@ -92,12 +92,12 @@ resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
         {
            "Effect" : "Allow",
            "Action" : ["dynamodb:*"],
-           "Resource" : "${aws_dynamodb_table.cloud-resume-table.arn}"
+           "Resource" : "${aws_dynamodb_table.cloud-resume-dynamodb-table.arn}"
         }
       ]
    })
 }
-
+#function
 resource "aws_lambda_function" "cloud-resume-lambda-function" {
   filename         = "cloud-resume-lambda-function.zip"
   function_name    = "cloud-resume-lambda-function"
