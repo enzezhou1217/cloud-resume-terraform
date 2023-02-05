@@ -60,9 +60,8 @@ resource "aws_lambda_permission" "lambda_permission" {
 
   # The /*/* portion grants access from any method on any resource
   # within the API Gateway "REST API".
-  source_arn = "${aws_api_gateway_rest_api.cloud-resume-lambda-function.execution_arn}/*/*"
+  source_arn = "${aws_apigatewayv2_api.api-to-invoke-lambda.execution_arn}/*/*"
 }
-
 #iam for lambda & lambda code cip and lambda function creation
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
