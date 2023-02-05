@@ -267,7 +267,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   custom_header {
-    Referer =      "uXg-Tnd",
+    Referer =      "uXg-Tnd"
   }
 }
 
