@@ -4,7 +4,7 @@ import boto3
 client = boto3.client('dynamodb')
 
 def lambda_handler(event, context):
-    # read the item
+    # read the item and retrieve the item
     data = client.get_item(
         TableName='cloud-resume-table',
         Key = {
