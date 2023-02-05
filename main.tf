@@ -29,6 +29,21 @@ resource "aws_apigatewayv2_api" "api-to-invoke-lambda" {
   name          = "cloud-resume-http-api-invoke-lambda-terraform"
   protocol_type = "HTTP"
 }
+resource "aws_apigatewayv2_integration" "http-api-proxy" {
+  api_id           = aws_apigatewayv2_api.api-to-invoke-lambda.id
+  integration_type = "HTTP_PROXY"
+
+  integration_method = "ANY"
+  integration_uri    = aws_lambda_function.cloud-resume-lambda-function.invoke_arn
+}
+
+resource "aws_apigatewayv2_route" "http-api-route" {
+  api_id    = aws_apigatewayv2_api.api-to-invoke-lambda.id
+  route_key = "ANY /example/{proxy+}"
+
+  target = "integrations/${aws_apigatewayv2_integration.http-api-proxy.id}"
+}
+
 resource "aws_lambda_permission" "lambda_permission" {
   statement_id  = "AllowAPIToInvokeLambda"
   action        = "lambda:InvokeFunction"
@@ -82,19 +97,6 @@ resource "aws_lambda_function" "cloud-resume-lambda-function" {
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "index.lambda_handler"
   runtime          = "python3.8"
-}
-
-#api lambda integration
-resource "aws_apigatewayv2_integration" "lambda-api-integration" {
-  api_id           = aws_apigatewayv2_api.api-to-invoke-lambda.id
-  integration_type = "AWS_PROXY"
-
-  connection_type           = "INTERNET"
-  #content_handling_strategy = "CONVERT_TO_TEXT"
-  description               = "lambda-api-integration"
-  integration_method        = "POST"
-  integration_uri           = aws_lambda_function.cloud-resume-lambda-function.invoke_arn
-  passthrough_behavior      = "WHEN_NO_MATCH"
 }
 
 //*******************************************************************************
