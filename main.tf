@@ -164,17 +164,20 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "cloud-resume-bucket-enzezhou"
 }
 
-resource "aws_cloudfront_distribution" "s3_distribution" {
+resource "aws_cloudfront_distribution" "s3_website" {
   origin {
-    domain_name = aws_s3_bucket.mybucket.bucket_domain_name
+    domain_name = aws_s3_bucket.mybucket.s3_endpoint
     origin_id   = local.s3_origin_id
     custom_header {
       name = "Referer"
       value = "uXg-Tnd"
     }
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    custom_origin_config {
+      http_port = "80"
+      https_port = "443"
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
   }
 
@@ -269,7 +272,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   viewer_certificate {
     acm_certificate_arn  = aws_acm_certificate.cert.arn
     ssl_support_method = "sni-only"
-    minimum_protocol_version = "TLSv1"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 
 }
@@ -281,8 +284,8 @@ resource "aws_route53_record" "ipv4" {
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.s3_distribution.domain_name
-    zone_id                = aws_cloudfront_distribution.s3_distribution.hosted_zone_id
+    name                   = aws_cloudfront_distribution.s3_website.domain_name
+    zone_id                = aws_cloudfront_distribution.s3_website.hosted_zone_id
     evaluate_target_health = true
   }
 }
