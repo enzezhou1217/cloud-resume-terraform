@@ -45,7 +45,7 @@ resource "aws_apigatewayv2_route" "http-api-route" {
 resource "aws_apigatewayv2_stage" "prod" {
   api_id = aws_apigatewayv2_api.api-to-invoke-lambda.id
   name   = "prod-stage"
-  auto-deploy = true
+  auto_deploy = true
 }
 
 resource "aws_lambda_permission" "lambda_permission" {
