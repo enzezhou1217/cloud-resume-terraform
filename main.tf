@@ -50,16 +50,17 @@ resource "aws_apigatewayv2_stage" "prod" {
   name   = "prod-stage"
   auto_deploy = true
 }
-#lambda permission to invoke api
+#permission to invoke api
+
 resource "aws_lambda_permission" "lambda_permission" {
-  statement_id  = "AllowAPIToInvokeLambda"
+  statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "cloud-resume-lambda-function"
+  function_name = "${aws_lambda_function.cloud-resume-lambda-function.function_name}"
   principal     = "apigateway.amazonaws.com"
 
-  # The /*/*/* part allows invocation from any stage, method and resource path
-  # within API Gateway REST API.
-  source_arn = "${aws_apigatewayv2_api.api-to-invoke-lambda.execution_arn}/*/*/*"
+  # The /*/* portion grants access from any method on any resource
+  # within the API Gateway "REST API".
+  source_arn = "${aws_api_gateway_rest_api.cloud-resume-lambda-function.execution_arn}/*/*"
 }
 
 #iam for lambda & lambda code cip and lambda function creation
