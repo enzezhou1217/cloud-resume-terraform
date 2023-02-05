@@ -1,0 +1,29 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::enzezhou-s3-static-website/*",
+            "Condition": {
+                "StringNotEquals": {
+                    "aws:Referer": [
+                        "uXg-Tnd",
+                        "78b-cut"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "S3SyncforGitHub",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::023639994151:user/UserForGitHubActionS3Sync"
+            },
+            "Action": "*",
+            "Resource": "arn:aws:s3:::enzezhou-s3-static-website/*"
+        }
+    ]
+}
