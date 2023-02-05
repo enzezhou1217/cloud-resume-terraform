@@ -37,7 +37,7 @@ def lambda_handler(event, context):
       'body': str(count),
       'headers': {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'enzezhou.com'
+        'Access-Control-Allow-Origin': '*'
       },
     }
     return response;
