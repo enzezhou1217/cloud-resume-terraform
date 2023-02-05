@@ -36,12 +36,16 @@ resource "aws_apigatewayv2_integration" "http-api-proxy" {
   integration_method = "ANY"
   integration_uri    = aws_lambda_function_url.for-api-gateway.function_url
 }
-
 resource "aws_apigatewayv2_route" "http-api-route" {
   api_id    = aws_apigatewayv2_api.api-to-invoke-lambda.id
   route_key = "ANY /example/{proxy+}"
 
   target = "integrations/${aws_apigatewayv2_integration.http-api-proxy.id}"
+}
+resource "aws_apigatewayv2_stage" "prod" {
+  api_id = aws_apigatewayv2_api.api-to-invoke-lambda.id
+  name   = "prod-stage"
+  auto-deploy = true
 }
 
 resource "aws_lambda_permission" "lambda_permission" {
