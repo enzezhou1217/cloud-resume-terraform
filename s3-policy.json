@@ -3,12 +3,12 @@
     "Statement": [
         {
             "Sid": "PublicReadGetObject",
-            "Effect": "Deny",
+            "Effect": "Allow",
             "Principal": "*",
             "Action": "s3:GetObject",
             "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*",
             "Condition": {
-                "StringNotEquals": {
+                "StringEquals": {
                     "aws:Referer": [
                         "uXg-Tnd",
                         "78b-cut"
