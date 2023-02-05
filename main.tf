@@ -143,7 +143,7 @@ resource "aws_acm_certificate_validation" "cert" {
 resource "aws_s3_bucket" "mybucket" {
   bucket = "cloud-resume-bucket-enzezhou"
   # Add specefic S3 policy in the s3-policy.json on the same directory
-  policy = file("s3-policy.json")
+  #policy = file("s3-policy.json")
 }
 resource "aws_s3_bucket_website_configuration" "mysite" {
   bucket = aws_s3_bucket.mybucket.bucket
