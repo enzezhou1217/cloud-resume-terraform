@@ -104,6 +104,7 @@ resource "aws_lambda_function" "cloud-resume-lambda-function" {
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "cloud-resume-lambda-function.lambda_handler"
   runtime          = "python3.8"
+  source_code_hash = filebase64sha256("cloud-resume-lambda-function.zip")
 }
 resource "aws_lambda_function_url" "for-api-gateway" {
   function_name      = aws_lambda_function.cloud-resume-lambda-function.function_name
