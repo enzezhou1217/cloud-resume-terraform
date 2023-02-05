@@ -258,6 +258,13 @@ resource "aws_cloudfront_distribution" "s3_website" {
 
   price_class = "PriceClass_200"
 
+  restrictions {
+    geo_restriction {
+      restriction_type = "blacklist"
+      locations        = []
+    }
+  }
+
   tags = {
     Name = "cloud-resume-cloudfront"
   }
