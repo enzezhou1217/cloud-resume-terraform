@@ -2,21 +2,6 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "PublicReadGetObject",
-            "Effect": "Deny",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*",
-            "Condition": {
-                "StringNotEquals": {
-                    "aws:Referer": [
-                        "uXg-Tnd",
-                        "78b-cut"
-                    ]
-                }
-            }
-        },
-        {
             "Sid": "S3SyncforGitHub",
             "Effect": "Allow",
             "Principal": {
