@@ -43,6 +43,8 @@ resource "aws_apigatewayv2_integration" "http-api-proxy" {
 resource "aws_apigatewayv2_route" "http-api-route" {
   api_id    = aws_apigatewayv2_api.api-to-invoke-lambda.id
   route_key = "$default"
+
+  target = "integrations/${aws_apigatewayv2_integration.http-api-proxy.id}"
 }
 resource "aws_apigatewayv2_stage" "prod" {
   api_id = aws_apigatewayv2_api.api-to-invoke-lambda.id
