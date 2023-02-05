@@ -6,7 +6,7 @@
             "Effect": "Deny",
             "Principal": "*",
             "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::enzezhou-s3-static-website/*",
+            "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*",
             "Condition": {
                 "StringNotEquals": {
                     "aws:Referer": [
@@ -23,7 +23,7 @@
                 "AWS": "arn:aws:iam::023639994151:user/UserForGitHubActionS3Sync"
             },
             "Action": "*",
-            "Resource": "arn:aws:s3:::enzezhou-s3-static-website/*"
+            "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*"
         }
     ]
 }
