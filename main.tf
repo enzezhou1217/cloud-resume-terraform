@@ -32,7 +32,7 @@ resource "aws_apigatewayv2_api" "api-to-invoke-lambda" {
 resource "aws_lambda_permission" "lambda_permission" {
   statement_id  = "AllowAPIToInvokeLambda"
   action        = "lambda:InvokeFunction"
-  function_name = "cloud-resume-lambda"
+  function_name = "cloud-resume-lambda-function"
   principal     = "apigateway.amazonaws.com"
 
   # The /*/*/* part allows invocation from any stage, method and resource path
@@ -60,11 +60,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 }
 EOF
 }
-#lambda roles
-resource "aws_iam_role_policy_attachment" "lambda_policy" {
-   role = aws_iam_role.iam_for_lambda.name
-   policy_arn = "arn:aws:iam::aws:policy/servicerole/AWSLambdaBasicExecutionRole"
-}         
+#lambda roles  
 resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
    name = "dynamodb_lambda_policy"
    role = aws_iam_role.iam_for_lambda.id
@@ -80,9 +76,9 @@ resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
    })
 }
 
-resource "aws_lambda_function" "cloud-resume-lambda" {
-  filename         = "cloud-resume-lambda.zip"
-  function_name    = "cloud-resume-lambda"
+resource "aws_lambda_function" "cloud-resume-lambda-function" {
+  filename         = "cloud-resume-lambda-function.zip"
+  function_name    = "cloud-resume-lambda-function"
   role             = aws_iam_role.iam_for_lambda.arn
   handler          = "index.lambda_handler"
   runtime          = "python3.8"
@@ -97,7 +93,7 @@ resource "aws_apigatewayv2_integration" "lambda-api-integration" {
   #content_handling_strategy = "CONVERT_TO_TEXT"
   description               = "lambda-api-integration"
   integration_method        = "POST"
-  integration_uri           = aws_lambda_function.cloud-resume-lambda.invoke_arn
+  integration_uri           = aws_lambda_function.cloud-resume-lambda-function.invoke_arn
   passthrough_behavior      = "WHEN_NO_MATCH"
 }
 
@@ -265,7 +261,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn  = aws_acm_certificate.cert.arn
   }
 }
 
