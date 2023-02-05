@@ -31,16 +31,18 @@ resource "aws_apigatewayv2_api" "api-to-invoke-lambda" {
 }
 resource "aws_apigatewayv2_integration" "http-api-proxy" {
   api_id           = aws_apigatewayv2_api.api-to-invoke-lambda.id
-  integration_type = "HTTP_PROXY"
+  integration_type = "AWS_PROXY"
 
-  integration_method = "ANY"
-  integration_uri    = aws_lambda_function.cloud-resume-lambda-function.arn
+  connection_type           = "INTERNET"
+  content_handling_strategy = "CONVERT_TO_TEXT"
+  description               = "Lambda integration"
+  integration_method        = "POST"
+  integration_uri           = aws_lambda_function.cloud-resume-lambda-function.arn
+  passthrough_behavior      = "WHEN_NO_MATCH"
 }
 resource "aws_apigatewayv2_route" "http-api-route" {
   api_id    = aws_apigatewayv2_api.api-to-invoke-lambda.id
   route_key = "$default"
-
-  target = aws_lambda_function.cloud-resume-lambda-function.arn
 }
 resource "aws_apigatewayv2_stage" "prod" {
   api_id = aws_apigatewayv2_api.api-to-invoke-lambda.id
