@@ -166,7 +166,7 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 
 resource "aws_cloudfront_distribution" "s3_website" {
   origin {
-    domain_name = aws_s3_bucket.mybucket.s3_endpoint
+    domain_name = aws_s3_bucket_website_configuration.mysite.website_endpoint
     origin_id   = local.s3_origin_id
     custom_header {
       name = "Referer"
