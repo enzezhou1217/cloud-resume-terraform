@@ -10,7 +10,7 @@ terraform {
     organization = "enzezhou117"
 
     workspaces {
-      name = "cloud-resume"
+      name = "cloud-resume-3"
     }
   }
 
