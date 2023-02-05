@@ -6,7 +6,7 @@ client = boto3.client('dynamodb')
 def lambda_handler(event, context):
     # read the item
     data = client.get_item(
-        TableName='cloud-resume-dynamodb-table',
+        TableName='cloud-resume-table',
         Key = {
             'DomainName': {
                 'S': 'enzezhou'
@@ -20,7 +20,7 @@ def lambda_handler(event, context):
     
     #update likes
     update = client.update_item(
-        TableName='cloud-resume-dynamodb-table',
+        TableName='cloud-resume-table',
         Key = {
             'DomainName': {'S': 'enzezhou'},
             'ID': {'S': 'id001'}
