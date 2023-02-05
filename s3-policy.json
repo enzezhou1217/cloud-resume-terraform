@@ -20,7 +20,9 @@
             "Sid": "S3SyncforGitHub",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::023639994151:user/UserForGitHubActionS3Sync"
+                "AWS": ["arn:aws:iam::023639994151:user/UserForGitHubActionS3Sync",
+                        "arn:aws:iam::023639994151:user/enzo"
+                ]
             },
             "Action": "*",
             "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*"
