@@ -357,9 +357,9 @@ resource "aws_cloudwatch_metric_alarm" "lambda-invocation" {
 
 resource "aws_cloudwatch_metric_alarm" "api-latency-alarm" {
   alarm_name                = "api-latency-alarm"
-  dimensions                = [{
+  dimensions                = {
     "ApiName" : "cloud-resume-http-api-invoke-lambda-terraform"
-  }]
+  }
   comparison_operator       = "GreaterThanOrEqualToThreshold "
   evaluation_periods        = "1"
   metric_name               = "Latency"
