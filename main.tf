@@ -366,7 +366,7 @@ resource "aws_cloudwatch_metric_alarm" "api-latency-alarm" {
   threshold                 = "1000"
   alarm_description         = "This metric monitors api latency, if average latency > 1s within 1 minute"
   insufficient_data_actions = []
-  ApiId = aws_apigatewayv2_api.api-to-invoke-lambda.id
+  ApiName = "cloud-resume-http-api-invoke-lambda-terraform"
   alarm_actions       = [aws_sns_topic.crc.arn]
 }
 resource "aws_sns_topic" "crc" {
