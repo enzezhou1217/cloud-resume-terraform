@@ -378,7 +378,7 @@ resource "aws_sns_topic" "crc" {
 resource "aws_ssm_parameter" "slack-webhook" {
   name  = "slack-webhook"
   type  = "String"
-  value = "https://hooks.slack.com/services/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"
+  value = "https://hooks.slack.com/services/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"
 }
 resource "aws_lambda_function" "trigger-slack" {
   filename         = "trigger-slack.zip"
