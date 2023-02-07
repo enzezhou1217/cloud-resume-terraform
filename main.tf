@@ -326,7 +326,7 @@ resource "aws_dynamodb_table" "cloud-resume-table" {
 }
 
 //*******************************************************************************
-//CloudWatch alarms & SNS topic
+//CloudWatch alarms & SNS topic & lambda to slack
 resource "aws_cloudwatch_metric_alarm" "lambda-error-alarm" {
   alarm_name                = "lambda-error-alarm"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
@@ -373,4 +373,30 @@ resource "aws_cloudwatch_metric_alarm" "api-latency-alarm" {
 }
 resource "aws_sns_topic" "crc" {
   name = "crc-metrics-topic"
+}
+#lambda and slack
+resource "aws_ssm_parameter" "slack-webhook" {
+  name  = "slack-webhook"
+  type  = "String"
+  value = "https://hooks.slack.com/services/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"
+}
+resource "aws_lambda_function" "trigger-slack" {
+  filename         = "trigger-slack.zip"
+  function_name    = "trigger-slack"
+  role             = aws_iam_role.iam_for_lambda.arn
+  handler          = "trigger-slack.lambda_handler"
+  runtime          = "python3.8"
+  source_code_hash = filebase64sha256("trigger-slack.zip")
+}
+resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
+  topic_arn = aws_sns_topic.crc.arn
+  protocol  = "lambda"
+  endpoint  = aws_lambda_function.trigger-slack.arn
+}
+resource "aws_lambda_permission" "lambda_permission_sns" {
+  statement_id  = "AllowSNSInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.trigger-slack.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn = "${aws_sns_topic.crc.arn}"
 }
