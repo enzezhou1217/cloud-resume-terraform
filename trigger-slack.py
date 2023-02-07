@@ -23,7 +23,7 @@ def lambda_handler(event,context):
     #Create format for slack message
     slack_message = {'text' : message}
     #retrieve webhook url from parameter store
-    webhook_url = "https://hooks.slack.com/services/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"
+    webhook_url = "https://hooks.slack.com/services/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"
     
     
     #make  request to the API
