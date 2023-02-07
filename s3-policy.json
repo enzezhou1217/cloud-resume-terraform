@@ -4,7 +4,7 @@
         {
             "Sid": "PublicReadGetObject",
             "Effect": "Allow",
-            "Principal": {"AWS" : "arn:aws:cloudfront::023639994151:distribution/E22TDGAJ44PVFM"},
+            "Principal": "*",
             "Action": "s3:GetObject",
             "Resource": "arn:aws:s3:::cloud-resume-bucket-enzezhou/*",
             "Condition": {
