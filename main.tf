@@ -329,7 +329,7 @@ resource "aws_dynamodb_table" "cloud-resume-table" {
 //CloudWatch alarms & SNS topic
 resource "aws_cloudwatch_metric_alarm" "lambda-error-alarm" {
   alarm_name                = "lambda-error-alarm"
-  comparison_operator       = "GreaterThanOrEqualToThreshold "
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
   metric_name               = "Errors"
   namespace                 = "AWS/Lambda"
@@ -343,7 +343,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda-error-alarm" {
 
 resource "aws_cloudwatch_metric_alarm" "lambda-invocation" {
   alarm_name                = "lambda-invocation-alarm"
-  comparison_operator       = "GreaterThanOrEqualToThreshold "
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
   metric_name               = "Invocations"
   namespace                 = "AWS/Lambda"
@@ -360,7 +360,7 @@ resource "aws_cloudwatch_metric_alarm" "api-latency-alarm" {
   dimensions                = {
     "ApiName" : "cloud-resume-http-api-invoke-lambda-terraform"
   }
-  comparison_operator       = "GreaterThanOrEqualToThreshold "
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
   metric_name               = "Latency"
   namespace                 = "AWS/API_Gateway"
