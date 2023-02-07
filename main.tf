@@ -23,7 +23,7 @@ provider "aws" {
 }
 
 //*******************************************************************************
-//API GATEWAY & LAMBDA 
+//API GATEWAY & LAMBDA
 #api creation &  permission for api gateway
 resource "aws_apigatewayv2_api" "api-to-invoke-lambda" {
   name          = "cloud-resume-http-api-invoke-lambda-terraform"
@@ -55,7 +55,7 @@ resource "aws_apigatewayv2_stage" "prod" {
 resource "aws_lambda_permission" "lambda_permission" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.cloud-resume-lambda-function.function_name}"
+  function_name = aws_lambda_function.cloud-resume-lambda-function.function_name
   principal     = "apigateway.amazonaws.com"
 
   # The /*/* portion grants access from any method on any resource
@@ -84,18 +84,18 @@ EOF
 }
 #policy for dynamo crud
 resource "aws_iam_role_policy" "dynamodb-lambda-policy" {
-   name = "dynamodb_lambda_policy"
-   role = aws_iam_role.iam_for_lambda.id
-   policy = jsonencode({
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-           "Effect" : "Allow",
-           "Action" : ["dynamodb:*"],
-           "Resource" : "${aws_dynamodb_table.cloud-resume-table.arn}"
-        }
-      ]
-   })
+  name = "dynamodb_lambda_policy"
+  role = aws_iam_role.iam_for_lambda.id
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : ["dynamodb:*"],
+        "Resource" : aws_dynamodb_table.cloud-resume-table.arn
+      }
+    ]
+  })
 }
 #function
 resource "aws_lambda_function" "cloud-resume-lambda-function" {
@@ -156,7 +156,9 @@ resource "aws_acm_certificate_validation" "cert" {
 //CloudFront & S3 & Route53 Records
 resource "aws_s3_bucket" "mybucket" {
   bucket = "cloud-resume-bucket-enzezhou"
-  # Add specefic S3 policy in the s3-policy.json on the same directory
+}
+resource "aws_s3_bucket_policy" "bucket-policy" {
+  bucket = aws_s3_bucket.mybucket.id
   policy = file("s3-policy.json")
 }
 resource "aws_s3_bucket_website_configuration" "mysite" {
@@ -203,7 +205,7 @@ resource "aws_cloudfront_distribution" "s3_website" {
 
 
 
-  # If you have domain configured use it here 
+  # If you have domain configured use it here
   aliases = ["enzezhou.com"]
 
   default_cache_behavior {
@@ -321,4 +323,52 @@ resource "aws_dynamodb_table" "cloud-resume-table" {
     name = "ID"
     type = "S"
   }
+}
+
+//*******************************************************************************
+//CloudWatch alarms & SNS topic
+resource "aws_cloudwatch_metric_alarm" "lambda-error-alarm" {
+  alarm_name                = "lambda-error-alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold "
+  evaluation_periods        = "1"
+  metric_name               = "Errors"
+  namespace                 = "AWS/Lambda"
+  period                    = "120"
+  statistic                 = "Sum"
+  threshold                 = "1"
+  alarm_description         = "This metric monitors lambda error"
+  alarm_actions       = [aws_sns_topic.crc.arn]
+  insufficient_data_actions = []
+}
+
+resource "aws_cloudwatch_metric_alarm" "lambda-invocation" {
+  alarm_name                = "lambda-invocation-alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold "
+  evaluation_periods        = "1"
+  metric_name               = "Invocations"
+  namespace                 = "AWS/Lambda"
+  period                    = "60"
+  statistic                 = "Sum"
+  threshold                 = "10"
+  alarm_description         = "This metric monitors lambda invocation spike, 10 visits in 1 minutes"
+  alarm_actions       = [aws_sns_topic.crc.arn]
+  insufficient_data_actions = []
+}
+
+resource "aws_cloudwatch_metric_alarm" "api-latency-alarm" {
+  alarm_name                = "api-latency-alarm"
+  comparison_operator       = "GreaterThanOrEqualToThreshold "
+  evaluation_periods        = "1"
+  metric_name               = "Latency"
+  namespace                 = "AWS/API_Gateway"
+  period                    = "60"
+  statistic                 = "Average"
+  threshold                 = "1000"
+  alarm_description         = "This metric monitors api latency, if average latency > 1s within 1 minute"
+  insufficient_data_actions = []
+  ApiId = aws_apigatewayv2_api.api-to-invoke-lambda.id
+  alarm_actions       = [aws_sns_topic.crc.arn]
+}
+resource "aws_sns_topic" "crc" {
+  name = "crc-metrics-topic"
 }
