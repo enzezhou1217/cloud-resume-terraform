@@ -9,8 +9,8 @@ def lambda_handler(event,context):
     #retrieve message from event when lamda is triggered from SNS
     print(json.dumps(event))
     
-    message = json.loads(event['Records'][0]['Sns']['Message'])
-    print(json.dumps(message))
+    message = event['Records'][int(0)]['Sns']['Message']
+    print(message)
     
     '''
     Retrieve Json vriables from message
@@ -21,13 +21,14 @@ def lambda_handler(event,context):
     '''
     
     #Create format for slack message
-    slack_message = {'text : {message}'}
+    slack_message = {'text' : message}
     #retrieve webhook url from parameter store
-    webhook_url = ssm.get_parameter(Name='slack-webhook', WithDecryption=True)
+    webhook_url = "https://hooks.slack.com/services/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"
+    
     
     #make  request to the API
     
-    req = Request(webhook_url['Parameter']['Value'],
+    req = Request(webhook_url,
                     json.dumps(slack_message).encode('utf-8'))
     
     try:

@@ -375,11 +375,6 @@ resource "aws_sns_topic" "crc" {
   name = "crc-metrics-topic"
 }
 #lambda and slack
-resource "aws_ssm_parameter" "slack-webhook" {
-  name  = "slack-webhook"
-  type  = "String"
-  value = "https://hooks.slack.com/services/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"
-}
 resource "aws_lambda_function" "trigger-slack" {
   filename         = "trigger-slack.zip"
   function_name    = "trigger-slack"
