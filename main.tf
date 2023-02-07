@@ -357,6 +357,9 @@ resource "aws_cloudwatch_metric_alarm" "lambda-invocation" {
 
 resource "aws_cloudwatch_metric_alarm" "api-latency-alarm" {
   alarm_name                = "api-latency-alarm"
+  dimensions                = [{
+    "ApiName" = "cloud-resume-http-api-invoke-lambda-terraform"
+  }]
   comparison_operator       = "GreaterThanOrEqualToThreshold "
   evaluation_periods        = "1"
   metric_name               = "Latency"
@@ -366,7 +369,6 @@ resource "aws_cloudwatch_metric_alarm" "api-latency-alarm" {
   threshold                 = "1000"
   alarm_description         = "This metric monitors api latency, if average latency > 1s within 1 minute"
   insufficient_data_actions = []
-  ApiName = "cloud-resume-http-api-invoke-lambda-terraform"
   alarm_actions       = [aws_sns_topic.crc.arn]
 }
 resource "aws_sns_topic" "crc" {
